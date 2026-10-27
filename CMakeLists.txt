@@ -239,7 +239,6 @@ target_compile_definitions(crosspoint_emulator PRIVATE
   PROGMEM=
   EINK_DISPLAY_SINGLE_BUFFER_MODE=1
   CROSSPOINT_VERSION="${CROSSPOINT_FIRMWARE_VERSION}-emu"
-  MINIZ_NO_ZLIB_COMPATIBLE_NAMES=1
   DISABLE_FS_H_WARNING=1
   XML_GE=0
   XML_CONTEXT_BYTES=0
@@ -254,3 +253,8 @@ target_compile_definitions(crosspoint_emulator PRIVATE
 target_compile_options(crosspoint_emulator PRIVATE
   "SHELL:-include ${CMAKE_CURRENT_SOURCE_DIR}/sim/include/sim_platform_compat.h"
 )
+# Clang flags HalFile::flush() in the firmware's HalStorage.h (it overrides Print::flush
+# without `override`); the device builds with GCC, which does not warn.
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(crosspoint_emulator PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wno-inconsistent-missing-override>)
+endif()
