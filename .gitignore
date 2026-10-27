@@ -16,6 +16,8 @@ Makefile
 # User content
 sdcard/
 .crosspoint/
+# Captures from Cmd+S
+screenshots/
 
 # macOS
 .DS_Store
