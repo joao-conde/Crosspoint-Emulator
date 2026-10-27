@@ -31,9 +31,6 @@ static inline struct tm* sim_gmtime_r(const time_t* t, struct tm* out) { return 
 #define gmtime_r sim_gmtime_r
 #endif
 
-// The firmware sets the clock from NTP/RTC; the emulator keeps the host clock instead.
-static inline int settimeofday(const struct timeval*, const void*) { return 0; }
-
 static inline size_t strlcpy(char* dst, const char* src, size_t size) {
   const size_t len = strlen(src);
   if (size > 0) {
@@ -54,11 +51,23 @@ static inline int unsetenv(const char* name) { return _putenv_s(name, ""); }
 #ifndef tzset
 #define tzset _tzset
 #endif
+
+#endif  // _WIN32
+
+// BSD alias that glibc, newlib and macOS provide (not always via the headers a file
+// includes) and MinGW lacks; repeating an identical typedef is valid C11 and C++.
+typedef unsigned int uint;
+
 // Arduino pgmspace: flash and RAM share one address space on the host.
 #ifndef memcpy_P
 #define memcpy_P memcpy
 #endif
 
-// glibc and newlib both provide this BSD alias; some firmware C code relies on it.
-typedef unsigned int uint;
-#endif  // _WIN32
+// The firmware sets the system clock from NTP/RTC; the emulator keeps the host clock.
+#include <sys/time.h>
+static inline int sim_settimeofday(const struct timeval* tv, const void* tz) {
+  (void)tv;
+  (void)tz;
+  return 0;
+}
+#define settimeofday sim_settimeofday
