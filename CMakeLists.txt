@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
 project(crosspoint-emulator CXX C)
 
 set(CMAKE_CXX_STANDARD 20)

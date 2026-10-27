@@ -43,7 +43,17 @@ This allows rapid UI development, testing, and debugging without needing physica
 
 ## Download & Setup
 
-Follow the steps for your operating system below. You need: a **C++17 compiler**, **CMake 3.16+**, **SDL2** (2.x, not SDL3), **Python 3**, **Git**, and the **Crosspoint** repository next to the emulator.
+Follow the steps for your operating system below. You need: a **C++20 compiler** (GCC or Clang; on Windows, MinGW-w64 GCC), **CMake 3.21+**, **SDL2** (2.x, not SDL3), **Python 3**, **Git**, and the **Crosspoint** repository next to the emulator.
+
+> **Crosspoint version.** The emulator implements the firmware's HAL and FreeInk SDK interfaces, so it has to match the Crosspoint version it builds against. It was last updated for crosspoint-reader [`c9cb1f8d`](https://github.com/crosspoint-reader/crosspoint-reader/commit/c9cb1f8d) (FreeInk SDK `44427f8`). An older or much newer checkout can fail to compile with errors like *out-of-line definition ... does not match any declaration*. When updating Crosspoint, always update its SDK submodule too:
+>
+> ```sh
+> cd ../Crosspoint
+> git pull
+> git submodule update --init --recursive
+> ```
+>
+> To build exactly the tested version, use `git checkout c9cb1f8d` instead of `git pull`, then run the same submodule command.
 
 ### Setup on macOS
 
@@ -92,7 +102,7 @@ Follow the steps for your operating system below. You need: a **C++17 compiler**
      cd ~/Desktop
      git clone https://github.com/jonmooreai/Crosspoint-Emulator.git
      cd Crosspoint-Emulator
-     git clone https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
+     git clone --recursive https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
      ```
    - Replace with your fork URLs if different (Crosspoint firmware: `https://github.com/crosspoint-reader/crosspoint-reader`).
    - The **Crosspoint** repo must be a **sibling** of **Crosspoint-Emulator** (e.g. `Desktop/Crosspoint-Emulator` and `Desktop/Crosspoint`).
@@ -120,7 +130,7 @@ The firmware is written for GCC (it uses GCC extensions and POSIX headers), so o
 
 2. **Install CMake** (skip if `cmake --version` already works, e.g. from WinLibs)
    - Go to: **https://cmake.org/download/**, download the **Windows x64 Installer** and choose **"Add CMake to the system PATH"**.
-   - Verify: `cmake --version` (3.24 or newer).
+   - Verify: `cmake --version` (3.21 or newer).
 
 3. **Install SDL2** (must be 2.x, not SDL3)
    - Go to: **https://github.com/libsdl-org/SDL/releases**
@@ -171,7 +181,7 @@ git clone https://github.com/jonmooreai/Crosspoint-Emulator.git
 cd Crosspoint-Emulator
 
 # Clone Crosspoint as a sibling directory (required)
-git clone https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
+git clone --recursive https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
 ```
 
 *(Use your fork URLs if different. Crosspoint firmware: `https://github.com/crosspoint-reader/crosspoint-reader`.)*
@@ -712,7 +722,7 @@ If you just cloned both repos and ran `cmake --build .` in `build/`, these fixes
   cd ~/Desktop   # or wherever you have Crosspoint-Emulator
   cd Crosspoint-Emulator
   # Clone Crosspoint firmware as a sibling named "Crosspoint" (so CMake finds it by default)
-  git clone https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
+  git clone --recursive https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
   ```
 - If Crosspoint is somewhere else, point CMake at it when configuring:
   ```bash
@@ -772,7 +782,7 @@ pkg-config --modversion sdl2
 **Crosspoint repo not found**:
 ```bash
 # Ensure Crosspoint is cloned
-git clone https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
+git clone --recursive https://github.com/crosspoint-reader/crosspoint-reader.git ../Crosspoint
 
 # Or set CROSSPOINT_ROOT
 cmake .. -DCROSSPOINT_ROOT=/absolute/path/to/Crosspoint
