@@ -12,6 +12,8 @@ CMakeFiles/
 cmake_install.cmake
 Makefile
 *.cmake
+# ...except the project's own CMake scripts
+!cmake/*.cmake
 
 # User content
 sdcard/
